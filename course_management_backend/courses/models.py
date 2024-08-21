@@ -1,18 +1,13 @@
-from djongo import models
+from django.db import models
 
-class Course(models.Model):
-    title = models.CharField(max_length=255)
-    course_code = models.CharField(max_length=50)
-    description = models.TextField()
+class Course:
+    def __init__(self, title, course_code, description):
+        self.title = title
+        self.course_code = course_code
+        self.description = description
 
-    def __str__(self):
-        return self.title
-
-class CourseInstance(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    year = models.IntegerField()
-    semester = models.IntegerField()
-    course_id = models.IntegerField()
-
-    def __str__(self):
-        return f"{self.course.title} - {self.year} Semester {self.semester}"
+class CourseInstance:
+    def __init__(self, year, semester, course_id):
+        self.year = year
+        self.semester = semester
+        self.course_id = course_id
