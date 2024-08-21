@@ -4,9 +4,17 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import Course, CourseInstance
 from .db_connection import db
 
-# POST /api/courses
-def create_course(request):
-    if request.method == 'POST':
+@csrf_exempt
+def course_management(request):
+    if request.method == 'GET':
+        # List all courses
+        courses = list(db.courses.find())
+        for course in courses:
+            course['_id'] = str(course['_id'])
+        return JsonResponse(courses, safe=False)
+
+    elif request.method == 'POST':
+        # Create a new course
         data = request.POST
         new_course = {
             "title": data.get('title'),
@@ -15,35 +23,27 @@ def create_course(request):
         }
         result = db.courses.insert_one(new_course)
         return JsonResponse({"_id": str(result.inserted_id)}, status=201)
+
     return HttpResponse(status=405)
 
-# GET /api/courses
+
 @csrf_exempt
-def list_courses(request):
+def view_or_delete_course(request, course_id):
     if request.method == 'GET':
-        courses = list(db.courses.find())
-        for course in courses:
-            course['_id'] = str(course['_id'])
-        return JsonResponse(courses, safe=False)
-    return HttpResponse(status=405)
-
-# GET /api/courses/<id>
-def view_course(request, course_id):
-    if request.method == 'GET':
+        # Fetch and return the course details
         course = db.courses.find_one({"_id": ObjectId(course_id)})
         if course:
             course['_id'] = str(course['_id'])
             return JsonResponse(course)
         return HttpResponse(status=404)
-    return HttpResponse(status=405)
-
-# DELETE /api/courses/<id>
-def delete_course(request, course_id):
-    if request.method == 'DELETE':
+    
+    elif request.method == 'DELETE':
+        # Delete the course and return appropriate status
         result = db.courses.delete_one({"_id": ObjectId(course_id)})
         if result.deleted_count:
             return HttpResponse(status=204)
         return HttpResponse(status=404)
+    
     return HttpResponse(status=405)
 
 # POST /api/instances
@@ -85,31 +85,29 @@ def list_instances(request, year, semester):
     return HttpResponse(status=405)
 
 
-# GET /api/instances/<year>/<semester>/<course_id>
-def view_instance(request, year, semester, course_id):
+@csrf_exempt
+def view_or_delete_instance(request, year, semester, course_id):
     if request.method == 'GET':
+        # Fetch and return the instance details
         instance = db.instances.find_one({
-            "year": int(year),         # Ensure year is an integer
-            "semester": int(semester), # Ensure semester is an integer
-            "course_id": int(course_id),     # Match course_id
+            "year": int(year),         
+            "semester": int(semester),
+            "course_id": int(course_id),
         })
         if instance:
             instance['_id'] = str(instance['_id'])  # Convert ObjectId to string
             return JsonResponse(instance)
         return HttpResponse(status=404)
-    return HttpResponse(status=405)
-
-
-
-# DELETE /api/instances/<year>/<semester>/<id>
-def delete_instance(request, year, semester, instance_id):
-    if request.method == 'DELETE':
+    
+    elif request.method == 'DELETE':
+        # Delete the instance and return appropriate status
         result = db.instances.delete_one({
-            "year": year,
-            "semester": semester,
-            "_id": ObjectId(instance_id)
+            "year": int(year),
+            "semester": int(semester),
+            "course_id": int(course_id)
         })
         if result.deleted_count:
             return HttpResponse(status=204)
         return HttpResponse(status=404)
+    
     return HttpResponse(status=405)
