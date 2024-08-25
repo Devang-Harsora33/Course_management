@@ -41,7 +41,7 @@ const App2 = () => {
       const coursesData = await fetchCourses();
       setCourses(coursesData);
 
-      // Fetch all instances to populate year and semester dropdowns
+   
       const allInstances = await fetchInstances();
       const uniqueYears = [...new Set(allInstances.map((inst) => inst.year))];
       const uniqueSemesters = [
@@ -65,7 +65,7 @@ const App2 = () => {
         selectedYear,
         selectedSemester
       );
-      console.log("Search Results:", searchResults); // Debug output
+      console.log("Search Results:", searchResults); 
       setInstances(searchResults);
     } catch (error) {
       console.error("Error searching instances:", error);
@@ -76,13 +76,13 @@ const App2 = () => {
     const instanceData = {
       year: newYear,
       semester: newSemester,
-      title: selectedCourse.title, // Store title
-      course_id: selectedCourse.course_code, // Store course_code
+      title: selectedCourse.title, 
+      course_id: selectedCourse.course_code, 
     };
 
     try {
       const newInstance = await createInstance(instanceData);
-      setInstances([...instances, newInstance]); // Update instances list
+      setInstances([...instances, newInstance]);
     } catch (error) {
       console.error("Error creating instance:", error);
     }
@@ -115,7 +115,7 @@ const App2 = () => {
               );
               setSelectedCourse({
                 title: selected.title,
-                course_code: selected.course_code, // Store course_code
+                course_code: selected.course_code, 
               });
             }}
             fullWidth
