@@ -14,6 +14,7 @@ const InstancesList = ({ year, semester }) => {
       try {
         const data = await fetchInstances(year, semester);
         setInstances(data);
+        console.log(instances);
       } catch (err) {
         setError("Failed to fetch instances");
       } finally {

@@ -1,8 +1,16 @@
-// src/components/CoursesList.jsx
-
 import React, { useEffect, useState } from "react";
 import { fetchCourses, deleteCourse } from "../services/api";
-import CreateCourse from "./CreateCourse";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Button,
+  Paper,
+  Typography,
+} from "@mui/material";
 
 const CoursesList = () => {
   const [courses, setCourses] = useState([]);
@@ -33,28 +41,43 @@ const CoursesList = () => {
     }
   };
 
-  const handleCourseCreated = (newCourse) => {
-    setCourses([...courses, newCourse]);
-  };
-
-  if (loading) return <p>Loading courses...</p>;
-  if (error) return <p>{error}</p>;
+  if (loading) return <Typography>Loading courses...</Typography>;
+  if (error) return <Typography color="error">{error}</Typography>;
 
   return (
-    <div>
-      <CreateCourse onCourseCreated={handleCourseCreated} />
-      <h2>Courses List</h2>
-      <ul>
-        {courses.map((course) => (
-          <li key={course._id}>
-            <strong>{course.title}</strong> - {course.course_code}
-            <br></br>
-            {course.description}
-            <button onClick={() => handleDelete(course._id)}>Delete</button>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <TableContainer component={Paper}>
+      <Typography variant="h6" gutterBottom style={{ padding: "16px" }}>
+        Courses List
+      </Typography>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Title</TableCell>
+            <TableCell>Description</TableCell>
+            <TableCell>Course Code</TableCell>
+            <TableCell>Actions</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {courses.map((course) => (
+            <TableRow key={course._id}>
+              <TableCell>{course.title}</TableCell>
+              <TableCell>{course.course_code}</TableCell>
+              <TableCell>{course.description}</TableCell>
+              <TableCell>
+                <Button
+                  onClick={() => handleDelete(course._id)}
+                  variant="contained"
+                  color="primary"
+                >
+                  Delete
+                </Button>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 };
 

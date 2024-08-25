@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL; // Replace with your Django backend URL
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
@@ -35,6 +35,7 @@ export const deleteCourse = async (courseId) => {
 // Create a new instance
 export const createInstance = async (instanceData) => {
   const response = await api.post("/instances", instanceData);
+  console.log("created", instanceData);
   return response.data;
 };
 

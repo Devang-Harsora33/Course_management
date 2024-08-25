@@ -15,7 +15,7 @@ const CreateInstance = ({ onInstanceCreated }) => {
       const newInstance = {
         year: parseInt(year),
         semester: parseInt(semester),
-        course_id: parseInt(courseId),
+        title: courseId,
       };
       const createdInstance = await createInstance(newInstance);
       onInstanceCreated(createdInstance);

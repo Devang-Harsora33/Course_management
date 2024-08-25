@@ -1,7 +1,6 @@
-// src/components/CreateCourse.jsx
-
 import React, { useState } from "react";
 import { createCourse } from "../services/api";
+import { TextField, Button, Typography } from "@mui/material";
 
 const CreateCourse = ({ onCourseCreated }) => {
   const [title, setTitle] = useState("");
@@ -28,37 +27,44 @@ const CreateCourse = ({ onCourseCreated }) => {
   };
 
   return (
-    <div>
-      <h2>Create New Course</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+    <div className="flex justify-center items-start flex-col">
+      <Typography variant="h4" gutterBottom>
+        Create New Course
+      </Typography>
+      {error && <Typography color="error">{error}</Typography>}
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>Title:</label>
-          <input
-            type="text"
+        <div style={{ marginBottom: "16px" }}>
+          <TextField
+            label="Title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
+            fullWidth
           />
         </div>
-        <div>
-          <label>Course Code:</label>
-          <input
-            type="text"
+        <div style={{ marginBottom: "16px" }}>
+          <TextField
+            label="Course Code"
             value={courseCode}
             onChange={(e) => setCourseCode(e.target.value)}
             required
+            fullWidth
           />
         </div>
-        <div>
-          <label>Description:</label>
-          <textarea
+        <div style={{ marginBottom: "16px" }}>
+          <TextField
+            label="Description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             required
+            fullWidth
+            multiline
+            rows={4}
           />
         </div>
-        <button type="submit">Create Course</button>
+        <Button type="submit" variant="contained" color="primary">
+          Create Course
+        </Button>
       </form>
     </div>
   );
